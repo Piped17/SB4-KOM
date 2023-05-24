@@ -2,7 +2,7 @@
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="dk.sdu.mmmi.cbse.osgiasteroids">
     <implementation class="dk.sdu.mmmi.cbse.osgiasteroids.AsteroidProcessor"/>
    <service>
-       <provide interface="dk.sdu.mmmi.cbse.common.services.IEntityProcessingService"/>
+       <provide interface="services.dk.sdu.piped17.cbse.common.IEntityProcessingService"/>
    </service>
    <reference bind="setAsteroidSplitter" cardinality="1..1" 
               interface="dk.sdu.mmmi.cbse.common.asteroids.IAsteroidSplitter" 

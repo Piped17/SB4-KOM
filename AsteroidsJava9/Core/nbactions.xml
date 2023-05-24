@@ -10,7 +10,7 @@
                 <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
             </goals>
             <properties>
-                <exec.args>-classpath %classpath dk.sdu.mmmi.cbse.main.Main</exec.args>
+                <exec.args>-classpath %classpath main.dk.sdu.piped17.cbse.Main</exec.args>
                 <exec.executable>java</exec.executable>
             </properties>
         </action>

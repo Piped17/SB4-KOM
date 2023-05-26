@@ -8,11 +8,13 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import dk.sdu.piped17.cbse.asteroidsystem.AsteroidControlSystem;
 import dk.sdu.piped17.cbse.asteroidsystem.AsteroidPlugin;
+import dk.sdu.piped17.cbse.collisionsystem.CollisionPlugin;
 import dk.sdu.piped17.cbse.common.data.Entity;
 import dk.sdu.piped17.cbse.common.data.GameData;
 import dk.sdu.piped17.cbse.common.data.World;
 import dk.sdu.piped17.cbse.common.services.IEntityProcessingService;
 import dk.sdu.piped17.cbse.common.services.IGamePluginService;
+import dk.sdu.piped17.cbse.common.services.IPostEntityProcessingService;
 import dk.sdu.piped17.cbse.managers.GameInputProcessor;
 import dk.sdu.piped17.cbse.playersystem.PlayerControlSystem;
 import dk.sdu.piped17.cbse.playersystem.PlayerPlugin;
@@ -28,6 +30,7 @@ public class Game
     private ShapeRenderer sr;
 
     private final GameData gameData = new GameData();
+    private List<IPostEntityProcessingService> entityPostProcessors = new ArrayList<>();
     private List<IEntityProcessingService> entityProcessors = new ArrayList<>();
     private List<IGamePluginService> entityPlugins = new ArrayList<>();
     private World world = new World();
@@ -44,15 +47,19 @@ public class Game
 
         sr = new ShapeRenderer();
 
+
+
         Gdx.input.setInputProcessor(
                 new GameInputProcessor(gameData)
         );
 
+        //add player
         IGamePluginService playerPlugin = new PlayerPlugin();
 
         IEntityProcessingService playerProcess = new PlayerControlSystem();
         entityPlugins.add(playerPlugin);
         entityProcessors.add(playerProcess);
+
         // Lookup all Game Plugins using ServiceLoader
         for (IGamePluginService iGamePlugin : entityPlugins) {
             iGamePlugin.start(gameData, world);
@@ -71,11 +78,14 @@ public class Game
         for (IGamePluginService iGamePlugin : entityPlugins) {
             iGamePlugin.start(gameData, world);
         }
+
+        IPostEntityProcessingService collisionProcess = new CollisionPlugin();
+        entityPostProcessors.add(collisionProcess);
     }
 
 
     @Override
-    public void render() {
+    public void render(){
 
         // clear screen to black
         Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -94,6 +104,10 @@ public class Game
         // Update
         for (IEntityProcessingService entityProcessorService : entityProcessors) {
             entityProcessorService.process(gameData, world);
+        }
+        // Collision detection
+        for (IPostEntityProcessingService entityPostProcessorService : entityPostProcessors) {
+            entityPostProcessorService.process(gameData, world);
         }
     }
 

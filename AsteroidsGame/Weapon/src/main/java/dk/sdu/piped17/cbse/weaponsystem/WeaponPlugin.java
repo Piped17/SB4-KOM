@@ -25,12 +25,11 @@ public class WeaponPlugin implements IEntityProcessingService {
     @Override
     public void process(GameData gameData, World world) {
         for (Entity player : world.getEntities(Player.class)) {
-            if (gameData.getKeys().isPressed(GameKeys.SPACE)) {
-                weapon.fireWeapon();
+            if (gameData.getKeys().isDown(GameKeys.SPACE)) {
                 for (RunTimeInstantiatorService bullet : getBulletSPIs()) {
                     world.addEntity(bullet.spawn(player.getPart(PositionPart.class), gameData));
                 }
-                System.out.println("Firing");
+                weapon.fireWeapon();
             }
         }
     }

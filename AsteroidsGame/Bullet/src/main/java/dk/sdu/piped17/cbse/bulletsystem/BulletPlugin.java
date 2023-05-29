@@ -5,7 +5,7 @@ import dk.sdu.piped17.cbse.common.data.Entity;
 import dk.sdu.piped17.cbse.common.data.GameData;
 import dk.sdu.piped17.cbse.common.data.World;
 import dk.sdu.piped17.cbse.common.services.IGamePluginService;
-import dk.sdu.piped17.cbse.common.bullet.Bullet;
+
 
 public class BulletPlugin implements IGamePluginService {
 

@@ -15,12 +15,14 @@ import dk.sdu.piped17.cbse.common.data.World;
 import dk.sdu.piped17.cbse.common.services.IEntityProcessingService;
 import dk.sdu.piped17.cbse.common.services.IGamePluginService;
 import dk.sdu.piped17.cbse.common.services.IPostEntityProcessingService;
+import dk.sdu.piped17.cbse.common.util.SPILocator;
 import dk.sdu.piped17.cbse.managers.GameInputProcessor;
 import dk.sdu.piped17.cbse.playersystem.PlayerControlSystem;
 import dk.sdu.piped17.cbse.playersystem.PlayerPlugin;
 
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class Game
@@ -146,5 +148,16 @@ public class Game
 
     @Override
     public void dispose() {
+    }
+    private Collection<? extends IGamePluginService> getPluginServices() {
+        return SPILocator.locateAll(IGamePluginService.class);
+    }
+
+    private Collection<? extends IEntityProcessingService> getEntityProcessingServices() {
+        return SPILocator.locateAll(IEntityProcessingService.class);
+    }
+
+    private Collection<? extends IPostEntityProcessingService> getEntityPostProcessingServices() {
+        return SPILocator.locateAll(IPostEntityProcessingService.class);
     }
 }

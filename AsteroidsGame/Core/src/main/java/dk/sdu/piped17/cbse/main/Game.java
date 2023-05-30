@@ -21,8 +21,7 @@ import dk.sdu.piped17.cbse.playersystem.PlayerControlSystem;
 import dk.sdu.piped17.cbse.playersystem.PlayerPlugin;
 
 
-import java.util.ArrayList;
-import java.util.Collection;
+
 import java.util.List;
 
 public class Game
@@ -32,10 +31,15 @@ public class Game
     private ShapeRenderer sr;
 
     private final GameData gameData = new GameData();
-    private List<IPostEntityProcessingService> entityPostProcessors = new ArrayList<>();
-    private List<IEntityProcessingService> entityProcessors = new ArrayList<>();
-    private List<IGamePluginService> entityPlugins = new ArrayList<>();
+    private List<IEntityProcessingService> entityProcessors;
+    private List<IGamePluginService> gamePluginServices;
+    private List<IPostEntityProcessingService> postEntityProcessors;
     private World world = new World();
+    public Game(List<IGamePluginService> gamePluginServices, List<IEntityProcessingService> entityProcessingServices, List<IPostEntityProcessingService> postEntityProcessingServices) {
+        this.gamePluginServices = gamePluginServices;
+        this.entityProcessors = entityProcessingServices;
+        this.postEntityProcessors = postEntityProcessingServices;
+    }
 
     @Override
     public void create() {
@@ -59,17 +63,17 @@ public class Game
         IGamePluginService playerPlugin = new PlayerPlugin();
 
         IEntityProcessingService playerProcess = new PlayerControlSystem();
-        entityPlugins.add(playerPlugin);
+        gamePluginServices.add(playerPlugin);
         entityProcessors.add(playerProcess);
 
         // Lookup all Game Plugins using ServiceLoader
-        for (IGamePluginService iGamePlugin : entityPlugins) {
+        for (IGamePluginService iGamePlugin : gamePluginServices) {
             iGamePlugin.start(gameData, world);
         }
         // asteroid
         for (int i = 0; i < MathUtils.random(5, 20); i++) {
             IGamePluginService bigAsteroidPlugin = new AsteroidPlugin(MathUtils.random(2,3));
-            entityPlugins.add(bigAsteroidPlugin);
+            gamePluginServices.add(bigAsteroidPlugin);
         }
 
         //Asteroid controller
@@ -77,12 +81,12 @@ public class Game
         entityProcessors.add(bigAsteroidProcess);
 
         // Lookup all Game Plugins using ServiceLoader
-        for (IGamePluginService iGamePlugin : entityPlugins) {
+        for (IGamePluginService iGamePlugin : gamePluginServices) {
             iGamePlugin.start(gameData, world);
         }
 
         IPostEntityProcessingService collisionProcess = new CollisionPlugin();
-        entityPostProcessors.add(collisionProcess);
+        postEntityProcessors.add(collisionProcess);
     }
 
 
@@ -108,7 +112,7 @@ public class Game
             entityProcessorService.process(gameData, world);
         }
         // Collision detection
-        for (IPostEntityProcessingService entityPostProcessorService : entityPostProcessors) {
+        for (IPostEntityProcessingService entityPostProcessorService : postEntityProcessors) {
             entityPostProcessorService.process(gameData, world);
         }
     }
@@ -148,16 +152,5 @@ public class Game
 
     @Override
     public void dispose() {
-    }
-    private Collection<? extends IGamePluginService> getPluginServices() {
-        return SPILocator.locateAll(IGamePluginService.class);
-    }
-
-    private Collection<? extends IEntityProcessingService> getEntityProcessingServices() {
-        return SPILocator.locateAll(IEntityProcessingService.class);
-    }
-
-    private Collection<? extends IPostEntityProcessingService> getEntityPostProcessingServices() {
-        return SPILocator.locateAll(IPostEntityProcessingService.class);
     }
 }

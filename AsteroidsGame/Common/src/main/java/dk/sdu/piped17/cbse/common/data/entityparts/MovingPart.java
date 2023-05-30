@@ -130,4 +130,35 @@ public class MovingPart
     public float getSpeed() {
         return (float) sqrt(dx*dx+dy*dy);
     }
+
+    public void shootingProcess(GameData gameData, Entity entity) {
+        PositionPart positionPart = entity.getPart(PositionPart.class);
+        float x = positionPart.getX();
+        float y = positionPart.getY();
+        float radians = positionPart.getRadians();
+        float dt = gameData.getDelta();
+        //acceleration
+        if (up){
+            dx += cos(radians) * acceleration * dt;
+            dy += sin(radians) * acceleration * dt;
+        }
+
+        //deceleration for bullets
+        float vec = (float) sqrt(dx*dx+dy*dy);
+        if (vec > 0) {
+            dx -= (dx / vec) * deceleration * dt;
+            dy -= (dy / vec) * deceleration * dt;
+        }
+        if (vec > maxSpeed) {
+            dx = (dx / vec) * maxSpeed;
+            dy = (dy / vec) * maxSpeed;
+        }
+
+
+
+        positionPart.setX(x);
+        positionPart.setY(y);
+
+        positionPart.setRadians(radians);
+    }
 }

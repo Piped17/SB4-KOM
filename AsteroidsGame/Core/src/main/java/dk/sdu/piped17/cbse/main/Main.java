@@ -1,5 +1,6 @@
 package dk.sdu.piped17.cbse.main;
 
+
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;

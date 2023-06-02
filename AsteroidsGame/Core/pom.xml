@@ -18,8 +18,8 @@
     
     <repositories>
         <repository>
-            <id>gdx-nightlies</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/sweat-tek/ShadedLibGDX</url>
         </repository>
     </repositories>
     
